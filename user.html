@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>User Dashboard - Health Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>User Dashboard</h1>
+    <nav><a href="login.html" id="logout">Logout</a></nav>
+  </div>
+  <div class="content">
+    <h2>Your Health Details</h2>
+    <div id="profile"></div>
+    <button id="editBtn" class="btn">Edit Personal Details</button>
+    <form id="editForm" style="display:none;margin-top:20px;">
+      <input id="name" class="input" placeholder="Full Name">
+      <input id="age" class="input" type="number" placeholder="Age">
+      <input id="gender" class="input" placeholder="Gender">
+      <input id="contact" class="input" placeholder="Contact">
+      <input id="blood" class="input" placeholder="Blood Group">
+      <input id="weight" class="input" placeholder="Weight">
+      <button type="submit" class="btn">Save</button>
+    </form>
+  </div>
+</div>
+<script src="common.js"></script>
+<script>
+(function(){
+  const s=getSession();
+  if(!s||s.role!=='user'){ location.href='login.html'; return; }
+  const users=getUsers();
+  const u=users[s.username];
+  const prof=document.getElementById('profile');
+  function show(){
+    prof.innerHTML=`<p><b>Name:</b> ${u.name}</p>
+    <p><b>Age:</b> ${u.age}</p>
+    <p><b>Gender:</b> ${u.gender}</p>
+    <p><b>Contact:</b> ${u.contact}</p>
+    <p><b>Blood Group:</b> ${u.blood}</p>
+    <p><b>Weight:</b> ${u.weight}</p>
+    <p><b>Disease:</b> ${u.disease}</p>
+    <p><b>Treatment:</b> ${u.treatment}</p>`;
+  }
+  show();
+  document.getElementById('editBtn').onclick=()=>{document.getElementById('editForm').style.display='block';}
+  document.getElementById('editForm').onsubmit=function(e){
+    e.preventDefault();
+    u.name=this.name.value.trim();
+    u.age=this.age.value.trim();
+    u.gender=this.gender.value.trim();
+    u.contact=this.contact.value.trim();
+    u.blood=this.blood.value.trim();
+    u.weight=this.weight.value.trim();
+    saveUsers(users);
+    alert('Updated');
+    show();
+    this.style.display='none';
+  }
+  document.getElementById('logout').onclick=(e)=>{e.preventDefault();clearSession();location.href='login.html';}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Login - Health Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="blue-bg">
+  <div class="container small">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input id="username" class="input" placeholder="Username" required>
+      <input id="password" type="password" class="input" placeholder="Password" required>
+      <select id="role" class="input">
+        <option value="user">User</option>
+        <option value="hospital">Hospital</option>
+      </select>
+      <button type="submit" class="btn">Login</button>
+    </form>
+    <p>New user? <a href="register.html">Register here</a></p>
+  </div>
+<script src="common.js"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const u=document.getElementById('username').value.trim();
+  const p=document.getElementById('password').value.trim();
+  const r=document.getElementById('role').value;
+  const users=getUsers();
+  if(users[u] && users[u].password===p && users[u].role===r){
+    setSession(u,r);
+    location.href=(r==='user')?'user.html':'hospital.html';
+  }else{
+    alert('Invalid login');
+  }
+});
+</script>
+</body>
+</html>

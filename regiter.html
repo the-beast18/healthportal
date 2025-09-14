@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Register - Health Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container small">
+    <h1>Register</h1>
+    <form id="regForm">
+      <input id="username" class="input" placeholder="Username" required>
+      <input id="password" type="password" class="input" placeholder="Password" required>
+      <input id="name" class="input" placeholder="Full Name" required>
+      <input id="age" type="number" class="input" placeholder="Age" required>
+      <select id="gender" class="input">
+        <option>Male</option><option>Female</option><option>Other</option>
+      </select>
+      <input id="contact" class="input" placeholder="Contact No">
+      <input id="blood" class="input" placeholder="Blood Group">
+      <input id="weight" class="input" placeholder="Weight (kg)">
+      <input id="disease" class="input" placeholder="Disease">
+      <input id="treatment" class="input" placeholder="Treatment">
+      <button type="submit" class="btn">Register</button>
+    </form>
+    <p>Already registered? <a href="login.html">Login</a></p>
+  </div>
+<script src="common.js"></script>
+<script>
+document.getElementById('regForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const u=document.getElementById('username').value.trim();
+  const users=getUsers();
+  if(users[u]){ alert('User exists'); return; }
+  users[u]={
+    password:document.getElementById('password').value.trim(),
+    role:'user',
+    name:document.getElementById('name').value.trim(),
+    age:document.getElementById('age').value.trim(),
+    gender:document.getElementById('gender').value,
+    contact:document.getElementById('contact').value.trim(),
+    blood:document.getElementById('blood').value.trim(),
+    weight:document.getElementById('weight').value.trim(),
+    disease:document.getElementById('disease').value.trim(),
+    treatment:document.getElementById('treatment').value.trim()
+  };
+  saveUsers(users);
+  alert('Registered! Please login.');
+  location.href='login.html';
+});
+</script>
+</body>
+</html>

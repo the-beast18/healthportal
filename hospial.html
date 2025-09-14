@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hospital Dashboard - Health Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container" style="max-width:1100px">
+  <div class="header">
+    <h1>Hospital Dashboard</h1>
+    <nav><a href="login.html" id="logout">Logout</a></nav>
+  </div>
+  <div class="content">
+    <h2>All Patients</h2>
+    <input id="searchBox" class="input" placeholder="Search by name or disease..." style="margin-bottom:15px">
+    <div id="tableWrap"></div>
+  </div>
+</div>
+<script src="common.js"></script>
+<script>
+(function(){
+  const s=getSession();
+  if(!s||s.role!=='hospital'){ location.href='login.html'; return; }
+
+  function render(filter=""){
+    const users=getUsers();
+    let html='<table><tr><th>Name</th><th>Age</th><th>Gender</th><th>Contact</th><th>Blood</th><th>Weight</th><th>Disease</th><th>Treatment</th><th>Action</th></tr>';
+    for(const k in users){
+      const u=users[k];
+      const txt=(u.name+" "+u.disease).toLowerCase();
+      if(filter && !txt.includes(filter.toLowerCase())) continue;
+
+      html+=`<tr>
+        <td>${u.name}</td><td>${u.age}</td><td>${u.gender}</td><td>${u.contact}</td>
+        <td>${u.blood}</td><td>${u.weight}</td>
+        <td><input id="d_${k}" class="update-field" value="${u.disease}"></td>
+        <td><input id="t_${k}" class="update-field" value="${u.treatment}"></td>
+        <td>
+          <button onclick="saveRecord('${k}')" class="small-btn save">Save</button>
+          <button onclick="deleteUser('${k}')" class="small-btn delete">Delete</button>
+        </td>
+      </tr>`;
+    }
+    html+='</table>';
+    document.getElementById('tableWrap').innerHTML=html;
+  }
+
+  window.saveRecord=function(k){
+    const users=getUsers();
+    users[k].disease=document.getElementById('d_'+k).value.trim();
+    users[k].treatment=document.getElementById('t_'+k).value.trim();
+    saveUsers(users); alert('Saved'); render(document.getElementById('searchBox').value);
+  }
+
+  window.deleteUser=function(k){
+    if(!confirm('Delete '+k+'?'))return;
+    const users=getUsers(); delete users[k]; saveUsers(users);
+    render(document.getElementById('searchBox').value);
+  }
+
+  document.getElementById('logout').onclick=(e)=>{e.preventDefault();clearSession();location.href='login.html';}
+  document.getElementById('searchBox').oninput=function(){render(this.value);}
+  render();
+})();
+</script>
+</body>
+</html>
